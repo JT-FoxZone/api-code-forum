@@ -17,15 +17,27 @@ export const getAllUser = async (req, res) => {
 
 export const Register = async (req, res) => {
   // Hash a password:
-  let password = req.body.password;
-  var hashedPassword = bcrypt.hashSync(password, salt);
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  // Request variable
+  let NEW_USER = {
+    fname: req.body.fname,
+    lname: req.body.lname,
+    email: req.body.email,
+    password: hashedPassword,
+  };
 
   // SQL Query:
-  let SQL = `INSERT INTO users (fname, lname, email, password) VALUES ('${req.body.fname}','${req.body.lname}','${req.body.email}','${hashedPassword}')`;
-  const [result] = await connection.query(SQL);
+  let SQL = `INSERT INTO users SET ?`;
 
-  if (result.affectedRows == 1) {
-    return res.send({ status: "1" });
+  try {
+    const [result] = await connection.query(SQL, NEW_USER);
+    if (result.affectedRows == 1) {
+      return res.send({ status: "1" });
+    }
+    res.send({ status: "0" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
   }
-  res.send({ status: "0" });
 };
