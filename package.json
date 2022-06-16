@@ -1,0 +1,20 @@
+{
+  "name": "api-code-forum",
+  "version": "1.0.0",
+  "description": "Edit API Code Forum from CSC350 Final Project 🍉",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js",
+    "start:prod": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
