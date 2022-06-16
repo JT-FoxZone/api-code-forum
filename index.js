@@ -1,6 +1,7 @@
 import express from "express";
 import userRouter from "./routes/user.js";
 
+
 const app = express();
 const port = 8000;
 
