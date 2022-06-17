@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllUser,
+  getUser,
   Register,
   Login,
   Authen,
@@ -11,6 +12,7 @@ import {
 const router = express.Router();
 
 router.get("/getAllUser", getAllUser);
+router.get("/getUser", getUser)
 router.post("/register", Register);
 router.post("/login", Login);
 router.post("/authen", Authen);
