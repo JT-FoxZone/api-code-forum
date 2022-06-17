@@ -78,8 +78,21 @@ export const Login = async (req, res) => {
           }
         }
       );
+    } else {
+      res.json({ status: "error", message: "Not found this email" });
     }
   } catch (error) {
     res.status(500).send({ status: "E", error });
   }
 };
+
+/**Authentication 🧩*/
+export const Authen = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    var decoded = jwt.verify(token, secret);
+    res.json({ status: "ok", decoded });
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+}
