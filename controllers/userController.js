@@ -5,7 +5,6 @@ const secret = "Code-Forum-T.Jirayus";
 
 const salt = bcrypt.genSaltSync(10);
 
-
 /**Get all Users 👤*/
 export const getAllUser = async (req, res) => {
   const sql = `SELECT * FROM users`;
@@ -19,7 +18,6 @@ export const getAllUser = async (req, res) => {
     res.status(500).send({ status: "E", error });
   }
 };
-
 
 /**Regiter 📑*/
 export const Register = async (req, res) => {
@@ -49,7 +47,6 @@ export const Register = async (req, res) => {
   }
 };
 
-
 /**Login 🍀*/
 export const Login = async (req, res) => {
   // SQL Query:
@@ -61,7 +58,8 @@ export const Login = async (req, res) => {
       bcrypt.compare(
         req.body.password,
         result[0].password,
-        function (err, isLogin) { //If the plain text password correct ✅
+        function (err, isLogin) {
+          //If the plain text password correct ✅
           if (isLogin) {
             var token = jwt.sign(
               {
@@ -79,7 +77,7 @@ export const Login = async (req, res) => {
         }
       );
     } else {
-      res.json({ status: "error", message: "Not found this email" });
+      res.json({ status: "Not found", message: "Not found this email" });
     }
   } catch (error) {
     res.status(500).send({ status: "E", error });
@@ -95,4 +93,16 @@ export const Authen = async (req, res) => {
   } catch (error) {
     res.json({ status: "error", message: error.message });
   }
-}
+};
+
+/**Get All Category 📒*/
+export const getAllCategory = async (req, res) => {
+  // SQL Query:
+  const SQL = "SELECT * FROM `category`";
+  try {
+    const [result] = await connection.query(SQL)
+    res.json(result)
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+};
