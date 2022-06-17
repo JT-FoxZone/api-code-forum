@@ -100,8 +100,26 @@ export const getAllCategory = async (req, res) => {
   // SQL Query:
   const SQL = "SELECT * FROM `category`";
   try {
-    const [result] = await connection.query(SQL)
-    res.json(result)
+    const [result] = await connection.query(SQL);
+    res.json(result);
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
+  }
+};
+
+/**Get Category by ID 🔑*/
+export const getCategory = async (req, res) => {
+  const id = req.params.category_id;
+  const SQL = "SELECT * FROM `category` WHERE `category_id` = ?";
+
+  try {
+    const [result] = await connection.query(SQL, [id]);
+
+    if (result.length != 0) {
+      return res.json(result);
+    } else {
+      res.json({ status: "Not found", message: "Not found this Category" });
+    }
   } catch (error) {
     res.json({ status: "error", message: error.message });
   }
