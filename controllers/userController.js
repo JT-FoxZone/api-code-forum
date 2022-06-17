@@ -22,8 +22,9 @@ export const getAllUser = async (req, res) => {
 /**Get User by ID 👤*/
 export const getUser = async (req, res) => {
   const id = req.body.user_id;
-  const SQL = "SELECT `fname`, `lname`, `email` FROM `users` WHERE `user_id` = ?"
-  
+  const SQL =
+    "SELECT `fname`, `lname`, `email` FROM `users` WHERE `user_id` = ?";
+
   try {
     const [result] = await connection.query(SQL, [id]);
 
@@ -35,7 +36,7 @@ export const getUser = async (req, res) => {
   } catch (error) {
     res.json({ status: "error", message: error.message });
   }
-}
+};
 
 /**Regiter 📑*/
 export const Register = async (req, res) => {
@@ -54,6 +55,22 @@ export const Register = async (req, res) => {
   // SQL Query:
   let SQL = `INSERT INTO users SET ?`;
 
+  // Check for duplicate emails:
+  let Check = `SELECT user_id FROM users WHERE email LIKE  '${req.body.email}'`;
+
+  try {
+    const [result] = await connection.query(Check);
+    if (result.length != 0) {
+      return res.json({
+        status: "error",
+        message: "duplicate emails, please try another email.",
+      });
+    }
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
+  }
+
+  // Insert User:
   try {
     const [result] = await connection.query(SQL, NEW_USER);
     if (result.affectedRows == 1) {
