@@ -1,8 +1,9 @@
 import connection from "../connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-const secret = "Code-Forum-T.Jirayus";
+import moment from "moment";
 
+const secret = "Code-Forum-T.Jirayus";
 const salt = bcrypt.genSaltSync(10);
 
 /**Get all Users 👥*/
@@ -60,9 +61,10 @@ export const Register = async (req, res) => {
 
   try {
     const [result] = await connection.query(Check);
+    //If duplicate emails 😂:
     if (result.length != 0) {
       return res.json({
-        status: "error",
+        status: "duplicate",
         message: "duplicate emails, please try another email.",
       });
     }
@@ -70,7 +72,7 @@ export const Register = async (req, res) => {
     res.status(500).send({ status: "E", error });
   }
 
-  // Insert User:
+  //not duplicate emails ✔️ --> Insert User:
   try {
     const [result] = await connection.query(SQL, NEW_USER);
     if (result.affectedRows == 1) {
@@ -157,5 +159,31 @@ export const getCategory = async (req, res) => {
     }
   } catch (error) {
     res.json({ status: "error", message: error.message });
+  }
+};
+
+/**Post Question ❔*/
+export const postQuestion = async (req, res) => {
+  //Time now
+  const now = moment().format(); 
+  //Data
+  const Question = {
+    title: req.body.title,
+    content: req.body.content,
+    datetime: now,
+    category_id: req.body.category_id,
+    user_id: req.body.user_id,
+  };
+
+  const SQL = "INSERT INTO `post` SET ?";
+
+  try {
+    const [result] = await connection.query(SQL, Question);
+    if (result.affectedRows == 1) {
+      return res.status(200).send({ status: "ok", message: "post success" });
+    }
+    res.send({ status: "0", message: "post failure" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
   }
 };
