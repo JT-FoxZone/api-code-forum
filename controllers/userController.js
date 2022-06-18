@@ -211,17 +211,17 @@ export const getPost = async (req, res) => {
 };
 
 /**Post List 🗒️*/
-export  const ListPost = async (req, res) => {
+export const ListPost = async (req, res) => {
   const category_id = req.params.category_id;
   const SQL = `
   SELECT post.post_id, post.title, users.fname, users.lname, post.datetime_post
   FROM post 
   INNER JOIN users ON post.user_id=users.user_id 
-  WHERE post.category_id = ?`
+  WHERE post.category_id = ?`;
 
   try {
-    const [result] = await connection.query(SQL, [category_id])
-    
+    const [result] = await connection.query(SQL, [category_id]);
+
     if (result.length != 0) {
       return res.status(200).send({ status: "ok", result });
     }
@@ -229,4 +229,28 @@ export  const ListPost = async (req, res) => {
   } catch (error) {
     res.status(500).send({ status: "E", error });
   }
-}
+};
+
+/**Comment ✒️*/
+export const Comment = async (req, res) => {
+  //Time now
+  const now = moment().format();
+  //Data
+  const comment = {
+    comment: req.body.comment,
+    post_id: req.body.post_id,
+    datetime_comment: now,
+    user_id: req.body.user_id,
+  };
+
+  const SQL = `INSERT INTO comment SET ?`;
+  try {
+    const [result] = await connection.query(SQL, comment);
+    if (result.length != 0) {
+      return res.status(200).send({ status: "ok" });
+    }
+    res.send({ status: "0" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
+  }
+};
