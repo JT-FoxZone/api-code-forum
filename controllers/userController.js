@@ -191,7 +191,8 @@ export const postQuestion = async (req, res) => {
 /**Get Post ❔*/
 export const getPost = async (req, res) => {
   const post_id = req.params.post_id;
-  const SQL = `SELECT category.category_name, post.title, post.content, users.fname, users.lname, post.datetime_post
+  const SQL = `
+  SELECT category.category_name, post.title, post.content, users.fname, users.lname, post.datetime_post
   FROM post 
   INNER JOIN users ON (post.user_id=users.user_id) 
   INNER JOIN category ON (post.category_id=category.category_id) 
@@ -199,12 +200,33 @@ export const getPost = async (req, res) => {
 
   try {
     const [result] = await connection.query(SQL, [post_id]);
-    
+
     if (result.length != 0) {
-      return res.status(200).send({ status: "ok", result});
+      return res.status(200).send({ status: "ok", result });
     }
     res.send({ status: "0", message: "not found" });
   } catch (error) {
     res.status(500).send({ status: "E", error });
   }
 };
+
+/**Post List 🗒️*/
+export  const ListPost = async (req, res) => {
+  const category_id = req.params.category_id;
+  const SQL = `
+  SELECT post.post_id, post.title, users.fname, users.lname, post.datetime_post
+  FROM post 
+  INNER JOIN users ON post.user_id=users.user_id 
+  WHERE post.category_id = ?`
+
+  try {
+    const [result] = await connection.query(SQL, [category_id])
+    
+    if (result.length != 0) {
+      return res.status(200).send({ status: "ok", result });
+    }
+    res.send({ status: "0", message: "not found" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
+  }
+}

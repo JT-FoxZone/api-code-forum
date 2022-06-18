@@ -9,6 +9,7 @@ import {
   getCategory,
   postQuestion,
   getPost,
+  ListPost,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post("/authen", Authen);
 router.get("/getAllCate", getAllCategory);
 router.get("/getCate/:category_id", getCategory);
 router.post("/post", postQuestion);
-router.get("/post/:post_id", getPost)
+router.get("/post/:post_id", getPost);
+router.get("/postList/:category_id", ListPost);
 
 export default router;
