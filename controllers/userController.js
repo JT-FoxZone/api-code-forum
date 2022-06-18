@@ -162,15 +162,15 @@ export const getCategory = async (req, res) => {
   }
 };
 
-/**Post Question ❔*/
+/**Post Question ❓*/
 export const postQuestion = async (req, res) => {
   //Time now
-  const now = moment().format(); 
+  const now = moment().format();
   //Data
   const Question = {
     title: req.body.title,
     content: req.body.content,
-    datetime: now,
+    datetime_post: now,
     category_id: req.body.category_id,
     user_id: req.body.user_id,
   };
@@ -183,6 +183,27 @@ export const postQuestion = async (req, res) => {
       return res.status(200).send({ status: "ok", message: "post success" });
     }
     res.send({ status: "0", message: "post failure" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
+  }
+};
+
+/**Get Post ❔*/
+export const getPost = async (req, res) => {
+  const post_id = req.params.post_id;
+  const SQL = `SELECT category.category_name, post.title, post.content, users.fname, users.lname, post.datetime_post
+  FROM post 
+  INNER JOIN users ON (post.user_id=users.user_id) 
+  INNER JOIN category ON (post.category_id=category.category_id) 
+  WHERE post.post_id = ?;`;
+
+  try {
+    const [result] = await connection.query(SQL, [post_id]);
+    
+    if (result.length != 0) {
+      return res.status(200).send({ status: "ok", result});
+    }
+    res.send({ status: "0", message: "not found" });
   } catch (error) {
     res.status(500).send({ status: "E", error });
   }
