@@ -39,6 +39,27 @@ export const getUser = async (req, res) => {
   }
 };
 
+/**Edit User Account 📃*/
+export const editAccount = async (req, res) => {
+  const { fname, lname, user_id } = req.body;
+  const SQL =
+    "UPDATE `users` SET `fname` = ?, `lname` = ? WHERE `users`.`user_id` = ?;";
+
+  try {
+    const [result] = await connection.query(SQL, [
+      fname,
+      lname,
+      user_id,
+    ]);
+    if (result.affectedRows == 1) {
+      return res.status(200).send({ status: "1" });
+    }
+    res.send({ status: "0" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
+  }
+};
+
 /**Regiter 📑*/
 export const Register = async (req, res) => {
   // Hash a password:
@@ -261,7 +282,7 @@ export const CommentList = async (req, res) => {
   const SQL = `SELECT comment.comment_id, comment.comment, comment.datetime_comment, users.fname 
   FROM comment 
   INNER JOIN users ON comment.user_id=users.user_id 
-  WHERE comment.post_id = ?;`
+  WHERE comment.post_id = ?;`;
 
   try {
     const [result] = await connection.query(SQL, [post_id]);
@@ -273,4 +294,4 @@ export const CommentList = async (req, res) => {
   } catch (error) {
     res.status(500).send({ status: "E", error });
   }
-}
+};

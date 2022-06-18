@@ -11,7 +11,8 @@ import {
   getPost,
   ListPost,
   Comment,
-  CommentList
+  CommentList,
+  editAccount,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -26,7 +27,8 @@ router.get("/getCate/:category_id", getCategory);
 router.post("/post", postQuestion);
 router.get("/post/:post_id", getPost);
 router.get("/postList/:category_id", ListPost);
-router.post("/comment",Comment)
-router.get("/commentList/:post_id",CommentList)
+router.post("/comment", Comment);
+router.get("/commentList/:post_id", CommentList);
+router.put("/editAccount", editAccount)
 
 export default router;
