@@ -11,6 +11,7 @@ import {
   getPost,
   ListPost,
   Comment,
+  CommentList
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -26,5 +27,6 @@ router.post("/post", postQuestion);
 router.get("/post/:post_id", getPost);
 router.get("/postList/:category_id", ListPost);
 router.post("/comment",Comment)
+router.get("/commentList/:post_id",CommentList)
 
 export default router;

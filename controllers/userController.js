@@ -254,3 +254,23 @@ export const Comment = async (req, res) => {
     res.status(500).send({ status: "E", error });
   }
 };
+
+/**Comment List 📖*/
+export const CommentList = async (req, res) => {
+  const post_id = req.params.post_id;
+  const SQL = `SELECT comment.comment_id, comment.comment, comment.datetime_comment, users.fname 
+  FROM comment 
+  INNER JOIN users ON comment.user_id=users.user_id 
+  WHERE comment.post_id = ?;`
+
+  try {
+    const [result] = await connection.query(SQL, [post_id]);
+
+    if (result.length != 0) {
+      return res.status(200).send({ status: "ok", result });
+    }
+    res.send({ status: "0", message: "not found" });
+  } catch (error) {
+    res.status(500).send({ status: "E", error });
+  }
+}
